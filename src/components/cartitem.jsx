@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import {
-  incrementQuantity,
-  decrementQuantity,
   removeFromCart,
+  increaseQuantity,
+  decreaseQuantity,
 } from "../redux/cartslice";
 
 export default function CartItem() {
@@ -15,57 +15,45 @@ export default function CartItem() {
     0
   );
 
+  if (cartItems.length === 0) {
+    return <h2 className="empty">Your Cart is Empty 🛒</h2>;
+  }
+
   return (
-    <div className="cart-container">
-      <h2>Shopping Cart 🛒</h2>
+    <div className="container">
+      <h2>Shopping Cart</h2>
 
-      {cartItems.length === 0 ? (
-        <h3>Cart is Empty</h3>
-      ) : (
-        <>
-          {cartItems.map((item) => (
-            <div className="cart-item" key={item.id}>
-              <img src={item.img} alt={item.name} />
+      {cartItems.map((item) => (
+        <div className="cart-card" key={item.id}>
+          <img src={item.img} alt={item.name} />
 
-              <div>
-                <h3>{item.name}</h3>
+          <div>
+            <h3>{item.name}</h3>
+            <p>${item.price}</p>
 
-                <p>Price: ${item.price}</p>
+            <div className="quantity">
+              <button onClick={() => dispatch(decreaseQuantity(item.id))}>
+                -
+              </button>
 
-                <p>Quantity: {item.quantity}</p>
-              </div>
+              <span>{item.quantity}</span>
 
-              <div className="cart-buttons">
-                <button
-                  onClick={() =>
-                    dispatch(incrementQuantity(item.id))
-                  }
-                >
-                  +
-                </button>
-
-                <button
-                  onClick={() =>
-                    dispatch(decrementQuantity(item.id))
-                  }
-                >
-                  -
-                </button>
-
-                <button
-                  onClick={() =>
-                    dispatch(removeFromCart(item.id))
-                  }
-                >
-                  Remove
-                </button>
-              </div>
+              <button onClick={() => dispatch(increaseQuantity(item.id))}>
+                +
+              </button>
             </div>
-          ))}
 
-          <h2>Total: ${total}</h2>
-        </>
-      )}
+            <button
+              className="remove"
+              onClick={() => dispatch(removeFromCart(item.id))}
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <h2>Total: ${total}</h2>
     </div>
   );
 }
