@@ -1,59 +1,119 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
 import {
-  removeFromCart,
-  increaseQuantity,
-  decreaseQuantity,
-} from "../redux/cartslice";
+  addItem,
+  removeItem,
+  updateQuantity,
+} from "../redux/CartSlice";
 
 export default function CartItem() {
   const cartItems = useSelector((state) => state.cart.items);
 
   const dispatch = useDispatch();
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+  // Grand Total
+  const totalAmount = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
     0
   );
 
-  if (cartItems.length === 0) {
-    return <h2 className="empty">Your Cart is Empty 🛒</h2>;
-  }
-
   return (
-    <div className="container">
-      <h2>Shopping Cart</h2>
+    <div style={{ padding: "20px" }}>
+      <h1>Your Shopping Cart 🛒</h1>
 
-      {cartItems.map((item) => (
-        <div className="cart-card" key={item.id}>
-          <img src={item.img} alt={item.name} />
-
-          <div>
-            <h3>{item.name}</h3>
-            <p>${item.price}</p>
-
-            <div className="quantity">
-              <button onClick={() => dispatch(decreaseQuantity(item.id))}>
-                -
-              </button>
-
-              <span>{item.quantity}</span>
-
-              <button onClick={() => dispatch(increaseQuantity(item.id))}>
-                +
-              </button>
-            </div>
-
-            <button
-              className="remove"
-              onClick={() => dispatch(removeFromCart(item.id))}
+      {cartItems.length === 0 ? (
+        <h2>Cart is Empty</h2>
+      ) : (
+        <>
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "20px",
+                border: "1px solid #ccc",
+                padding: "15px",
+                marginBottom: "20px",
+                borderRadius: "10px",
+                background: "#fff",
+              }}
             >
-              Remove
-            </button>
-          </div>
-        </div>
-      ))}
+              <img
+                src={item.image}
+                alt={item.name}
+                width="150"
+                height="150"
+                style={{
+                  objectFit: "cover",
+                  borderRadius: "10px",
+                }}
+              />
 
-      <h2>Total: ${total}</h2>
+              <div>
+                <h2>{item.name}</h2>
+
+                <p>Price: ${item.price}</p>
+
+                <p>
+                  Total: $
+                  {item.price * item.quantity}
+                </p>
+
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    alignItems: "center",
+                  }}
+                >
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        updateQuantity({
+                          id: item.id,
+                          quantity: item.quantity - 1,
+                        })
+                      )
+                    }
+                  >
+                    -
+                  </button>
+
+                  <span>{item.quantity}</span>
+
+                  <button
+                    onClick={() => dispatch(addItem(item))}
+                  >
+                    +
+                  </button>
+                </div>
+
+                <br />
+
+                <button
+                  onClick={() =>
+                    dispatch(removeItem(item.id))
+                  }
+                  style={{
+                    background: "red",
+                    color: "white",
+                    border: "none",
+                    padding: "10px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+
+          <h2>
+            Grand Total: ${totalAmount}
+          </h2>
+        </>
+      )}
     </div>
   );
 }
