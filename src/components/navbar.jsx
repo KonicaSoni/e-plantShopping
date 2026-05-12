@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-export default function Navbar({ setPage }) {
+export default function Navbar() {
   const cartItems = useSelector((state) => state.cart.items);
 
   const totalQuantity = cartItems.reduce(
@@ -12,18 +13,11 @@ export default function Navbar({ setPage }) {
     <nav className="navbar">
       <h2>Paradise Nursery 🌿</h2>
 
-      <div>
-        <button onClick={() => setPage("home")}>
-          Home
-        </button>
-
-        <button onClick={() => setPage("plants")}>
-          Products
-        </button>
-
-        <button onClick={() => setPage("cart")}>
-          Cart 🛒 ({totalQuantity})
-        </button>
+      <div className="nav-links">
+        <Link to="/">Home</Link>
+        <Link to="/plants">Plants</Link>
+        <Link to="/about">About</Link>
+        <Link to="/cart">Cart 🛒 ({totalQuantity})</Link>
       </div>
     </nav>
   );
