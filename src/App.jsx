@@ -1,37 +1,26 @@
-// 
-
-
-import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar";
 import ProductList from "./components/productlist";
 import CartItem from "./components/cartitem";
+import AboutUs from "./components/aboutus";
+import Home from "./components/home";
+import Footer from "./components/footer";
 import "./App.css";
 
 function App() {
-  const [page, setPage] = useState("home");
-
   return (
-    <>
-      <Navbar setPage={setPage} />
+    <BrowserRouter>
+      <Navbar />
 
-      {page === "home" && (
-        <div className="home">
-          <h1>Paradise Nursery 🌿</h1>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/plants" element={<ProductList />} />
+        <Route path="/cart" element={<CartItem />} />
+        <Route path="/about" element={<AboutUs />} />
+      </Routes>
 
-          <button onClick={() => setPage("plants")}>
-            Get Started
-          </button>
-        </div>
-      )}
-
-      {page === "plants" && (
-        <ProductList />
-      )}
-
-      {page === "cart" && (
-        <CartItem />
-      )}
-    </>
+      <Footer />
+    </BrowserRouter>
   );
 }
 
